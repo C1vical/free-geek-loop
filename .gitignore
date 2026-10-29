@@ -1,0 +1,21 @@
+# Python environment
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+
+# Streamlit / Web frameworks
+.streamlit/secrets.toml
+.next/
+node_modules/
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Sample data output
+*.log
+docs/exports/*.pdf
