@@ -9,20 +9,20 @@
 
 ## 📌 Executive Summary
 
-Free Geek Toronto (FGT) relies on technology sales for ~77% of its non-grant revenue[cite: 4, 5], yet faces a shrinking supply of quality incoming consumer donations due to retail trade-in programs[cite: 5]. While FGT thrives on uniform laptop batches[cite: 8], it currently operates with **zero corporate partners**[cite: 6, 9].
+Free Geek Toronto (FGT) relies on technology sales for ~77% of its non-grant revenue, yet faces a shrinking supply of quality incoming consumer donations due to retail trade-in programs. While FGT thrives on uniform laptop batches, it currently operates with **zero corporate partners**.
 
-**Free Geek Loop** is a dual-sided circular platform that digitizes corporate IT Asset Disposition (ITAD)[cite: 7, 12]. It allows Toronto SMBs to pledge future hardware refreshes, automates device compatibility pre-screening, matches incoming inventory with nonprofit demand, and generates corporate ESG impact reports[cite: 12].
+**Free Geek Loop** is a dual-sided circular platform that digitizes corporate IT Asset Disposition (ITAD). It allows Toronto SMBs to pledge future hardware refreshes, automates device compatibility pre-screening, matches incoming inventory with nonprofit demand, and generates corporate ESG impact reports.
 
 ---
 
 ## ✨ Core Features
 
-1. **Refresh Calendar:** B2B portal allowing companies to pledge upcoming device refresh cycles (e.g., 40 laptops in Q1) to give FGT forward-looking inventory visibility[cite: 12].
-2. **Device Fit Checker:** Automated CSV pre-screening engine that scores incoming equipment for refurbishment yield before scheduling pickup[cite: 8, 12].
-3. **Demand Matcher:** Direct circular matching engine linking corporate hardware pledges to submitted community nonprofit hardware requests[cite: 7, 12].
-4. **FGT Operations Dashboard:** Internal triage & inventory forecast portal built for FGT's lean team (1 FT, 5 PT staff)[cite: 4, 12].
-5. **ESG Impact Generator:** Provides corporate donors with verifiable Scope 3 carbon reduction and digital access impact metrics[cite: 12].
-6. **Scenario Calculator:** Interactive revenue & impact simulator for financial forecasting[cite: 12].
+1. **Refresh Calendar:** B2B portal allowing companies to pledge upcoming device refresh cycles (e.g., 40 laptops in Q1) to give FGT forward-looking inventory visibility.
+2. **Device Fit Checker:** Automated CSV pre-screening engine that scores incoming equipment for refurbishment yield before scheduling pickup.
+3. **Demand Matcher:** Direct circular matching engine linking corporate hardware pledges to submitted community nonprofit hardware requests.
+4. **FGT Operations Dashboard:** Internal triage & inventory forecast portal built for FGT's lean team (1 FT, 5 PT staff).
+5. **ESG Impact Generator:** Provides corporate donors with verifiable Scope 3 carbon reduction and digital access impact metrics.
+6. **Scenario Calculator:** Interactive revenue & impact simulator for financial forecasting.
 
 ---
 
@@ -30,8 +30,8 @@ Free Geek Toronto (FGT) relies on technology sales for ~77% of its non-grant rev
 
 - **Frontend & UI:** Streamlit / React (Tailwind CSS)
 - **Data Engine:** Pandas / Python 3.11
-- **Data Security:** NIST 800-88 / DoD sanitization protocol compliance logging[cite: 8, 12]
-- **Deployment:** Vercel / Streamlit Community Cloud (Zero-cost hosting footprint)[cite: 3, 4]
+- **Data Security:** NIST 800-88 / DoD sanitization protocol compliance logging
+- **Deployment:** Vercel / Streamlit Community Cloud (Zero-cost hosting footprint)
 
 ---
 
