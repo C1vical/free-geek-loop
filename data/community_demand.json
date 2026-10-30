@@ -1,0 +1,18 @@
+[
+  {
+    "organization_id": "ORG-101",
+    "name": "Parkdale Youth Tech Hub",
+    "required_devices": 20,
+    "min_ram_gb": 8,
+    "urgency": "High",
+    "purpose": "Digital literacy training for high school students"
+  },
+  {
+    "organization_id": "ORG-102",
+    "name": "Toronto Senior Connect",
+    "required_devices": 10,
+    "min_ram_gb": 4,
+    "urgency": "Medium",
+    "purpose": "Basic web browsing and video calling"
+  }
+]
