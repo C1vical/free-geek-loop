@@ -285,7 +285,7 @@ footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; 
   const NOW = new Date();
   const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
   const YEAR = TODAY.getFullYear();
-  const STORE_KEY = "fg-loop-demo-v5";
+  const STORE_KEY = "fg-loop-demo-v6";
 
   const SAMPLE_CSV = [
     "category,make,model,year,quantity,condition",
@@ -299,7 +299,7 @@ footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; 
     return {
       currentCompany: "",
       companies: [
-        { id: "stl", name: "St. Theresa of Lisieux CHS", contact: "IT lead, STL Robotics", employees: 110, area: "York Region", cycle: 4 },
+        { id: "stl", name: "St. Theresa of Lisieux CHS", contact: "STL IT lead", employees: 110, area: "York Region", cycle: 4 },
         { id: "harbourline", name: "Harbourline Accounting LLP", contact: "Dev Patel, Operations manager", employees: 85, area: "Downtown", cycle: 4 },
         { id: "liberty", name: "Liberty Village Software", contact: "Sam Okafor, IT", employees: 40, area: "Downtown", cycle: 3 },
         { id: "danforth", name: "Danforth Dental Group", contact: "Lena Fischer, Office manager", employees: 25, area: "East York", cycle: 5 },
@@ -619,7 +619,7 @@ footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; 
       '<div class="legend"><span><i class="seg-high"></i>' + a.high + ' high reuse</span><span><i class="seg-med"></i>' + a.med + ' medium</span><span><i class="seg-low"></i>' + a.low + " recycle</span></div>" +
       '<div style="margin:14px 0">' + note + "</div>" +
       '<h3 style="margin-bottom:4px">Nonprofits these laptops can go to</h3><p class="small muted" style="margin-bottom:10px">Refurbished and ready around ' + fmtDate(ready) + "</p>" +
-      (mine.length ? '<div class="match-list">' + mine.map((x) => { const d = demandById(x.demandId); return '<div class="match"><b>' + esc(d.org) + '</b><span class="mono">' + x.qty + " laptops</span><span class=\"meta\">Needed by " + fmtDate(d.needBy) + " · " + esc(d.purpose) + "</span></div>"; }).join("") + "</div>" +
+      (mine.length ? '<div class="match-list">' + mine.map((x) => { const d = demandById(x.demandId); return '<div class="match"><b>' + esc(d.org) + '</b><span class="mono">' + x.qty + (x.qty === 1 ? " laptop" : " laptops") + "</span><span class=\"meta\">Needed by " + fmtDate(d.needBy) + " · " + esc(d.purpose) + "</span></div>"; }).join("") + "</div>" +
         '<p class="small" style="margin-top:10px"><b class="mono">' + matched + " / " + a.readyLaptops + "</b> reuse-ready laptops matched</p>"
         : '<div class="empty">No open requests line up with this date yet. Your laptops still go into FGT\'s store for students, seniors and newcomers.</div>');
   }
@@ -738,7 +738,7 @@ footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; 
         bigStat(fmt(r.kg) + " kg", "e-waste diverted") + bigStat("~" + fmt(r.co2 / 1000) + " t", "CO₂e avoided (est.)") + bigStat(fmt(r.years), "extra device-years of use") +
         "</div>" +
         '<div class="grid-2-even"><div><h3 style="margin-bottom:8px">Where your devices went</h3>' +
-        (orgEntries.length ? '<div class="org-list">' + orgEntries.map(([o, q]) => "<div><span>" + esc(o) + '</span><span class="mono">' + q + " laptops</span></div>").join("") + "</div>" : '<p class="muted small">Your reused devices go to FGT\'s store for low-income households, students, seniors and newcomers.</p>') +
+        (orgEntries.length ? '<div class="org-list">' + orgEntries.map(([o, q]) => "<div><span>" + esc(o) + '</span><span class="mono">' + q + (q === 1 ? " laptop" : " laptops") + "</span></div>").join("") + "</div>" : '<p class="muted small">Your reused devices go to FGT\'s store for low-income households, students, seniors and newcomers.</p>') +
         '<p class="small muted" style="margin-top:10px">Every reused device is data-wiped before refurbishment. Devices that can\'t be reused are recycled through FGT\'s R2-certified recycling partner, which physically destroys data-bearing parts.</p></div>' +
         '<div><h3 style="margin-bottom:8px">Community value</h3><div class="org-list"><div><span>Est. volunteer &amp; trainee repair hours</span><span class="mono">' + fmt(r.hours) + "</span></div><div><span>Community organizations supplied</span><span class=\"mono\">" + orgEntries.length + "</span></div><div><span>Next planned refresh</span><span class=\"mono\">" + nextRefresh(c, pl) + "</span></div></div></div></div>" +
         '<div><div class="panel-head" style="margin-bottom:8px"><h3>Share it</h3><div class="btn-row no-print"><button class="btn btn-small" data-act="print">' + ICON.print + 'Save as PDF</button><button class="btn btn-small" data-act="copy-share">' + ICON.copy + 'Copy LinkedIn post</button></div></div><div class="share" id="shareText">' + esc(share) + "</div></div>" +
@@ -750,7 +750,7 @@ footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; 
   function bigStat(v, k) { return '<div class="stat"><div class="v">' + v + '</div><div class="k">' + k + "</div></div>"; }
   function nextRefresh(c, pl) {
     const todayISO = toISO(TODAY);
-    const upcoming = pl.filter((p) => p.refreshDate >= todayISO).map((p) => p.refreshDate).sort()[0];
+    const upcoming = pl.filter((p) => p.refreshDate >= todayISO && p.status < 5).map((p) => p.refreshDate).sort()[0];
     if (upcoming) return fmtDate(upcoming);
     const last = pl.map((p) => p.refreshDate).sort().pop();
     if (!last) return "—";
