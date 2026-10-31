@@ -5,7 +5,7 @@
 Built for the FUSE Blueprint 2026 case competition for Free Geek Toronto (FGT).
 
 - **Live app:** https://c1vical.github.io/free-geek-loop/
-- **Video:** [YOUTUBE UNLISTED LINK]
+- **Video:** https://youtu.be/xJLUrpKC-0k
 
 ## The problem
 
