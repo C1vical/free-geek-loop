@@ -19,3 +19,6 @@ Thumbs.db
 # Sample data output
 *.log
 docs/exports/*.pdf
+
+# Local virtualenv
+.venv/

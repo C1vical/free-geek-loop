@@ -1,53 +1,51 @@
-# 🔄 Free Geek Loop
+# Free Geek Loop
 
-> **Turn every corporate tech refresh into community access.**
+**Turn every corporate tech refresh into community access.**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![FUSE Blueprint 2026](https://img.shields.io/badge/Competition-FUSE%20Blueprint%202026-blue)](https://devpost.com)
+Free Geek Loop helps Free Geek Toronto (FGT) turn local organizations' laptop refreshes (schools, firms, clinics) into a predictable supply of high-value devices to refurbish and sell. Built for the FUSE Blueprint 2026 case competition.
 
----
+- **Live web app:** https://c1vical.github.io/free-geek-loop/
+- **Video:** [YOUTUBE UNLISTED LINK]
 
-## 📌 Executive Summary
+## The problem
 
-Free Geek Toronto (FGT) relies on technology sales for ~77% of its non-grant revenue, yet faces a shrinking supply of quality incoming consumer donations due to retail trade-in programs. While FGT thrives on uniform laptop batches, it currently operates with **zero corporate partners**.
+About 77% of FGT's roughly $240K yearly revenue comes from sales, mostly refurbished tech. But trade-in programs pull the best laptops away from donation, and FGT has no corporate partners, so it rarely gets the large batches of uniform business laptops it can refurbish fastest. FGT doesn't have a demand problem first. It has a predictable supply problem.
 
-**Free Geek Loop** is a dual-sided circular platform that digitizes corporate IT Asset Disposition (ITAD). It allows Toronto SMBs to pledge future hardware refreshes, automates device compatibility pre-screening, matches incoming inventory with nonprofit demand, and generates corporate ESG impact reports.
+## The solution
 
----
+A web app that turns a business's next device refresh into a planned pickup for FGT:
 
-## ✨ Core Features
+1. **Plan:** the business logs its next refresh date.
+2. **Pledge:** devices are scored for reuse before pickup.
+3. **Collect:** FGT's existing business pickup service brings them in.
+4. **Refurbish:** data wiped, tested and repaired as one uniform batch.
+5. **Match:** laptops are matched to nonprofit requests.
+6. **Report:** the business gets a shareable impact report, which brings it back for the next refresh.
 
-1. **Refresh Calendar:** B2B portal allowing companies to pledge upcoming device refresh cycles (e.g., 40 laptops in Q1) to give FGT forward-looking inventory visibility.
-2. **Device Fit Checker:** Automated CSV pre-screening engine that scores incoming equipment for refurbishment yield before scheduling pickup.
-3. **Demand Matcher:** Direct circular matching engine linking corporate hardware pledges to submitted community nonprofit hardware requests.
-4. **FGT Operations Dashboard:** Internal triage & inventory forecast portal built for FGT's lean team (1 FT, 5 PT staff).
-5. **ESG Impact Generator:** Provides corporate donors with verifiable Scope 3 carbon reduction and digital access impact metrics.
-6. **Scenario Calculator:** Interactive revenue & impact simulator for financial forecasting.
+## What's in the app
 
----
+| Tab | What it does |
+|---|---|
+| **Partner portal** | An organization picks or registers its account, uploads its device list (CSV) or enters it by hand, sees a live reuse fit check, creates a pledge and books a pickup. Below that, nonprofits waiting for laptops are listed and new requests can be logged and matched instantly. |
+| **FGT dashboard** | Staff see KPIs, a 12-month supply forecast and every pledge's status, advanced step by step to Deployed. |
+| **Impact report** | Devices reused and recycled, e-waste diverted, estimated CO₂ avoided and which organizations received the laptops. Projected until devices are deployed, then verified. Includes a ready-to-post LinkedIn update. |
 
-## 🛠️ Tech Stack & Open-Source Tools
+## Run it
 
-- **Frontend & UI:** Streamlit / React (Tailwind CSS)
-- **Data Engine:** Pandas / Python 3.11
-- **Data Security:** NIST 800-88 / DoD sanitization protocol compliance logging
-- **Deployment:** Vercel / Streamlit Community Cloud (Zero-cost hosting footprint)
+The app is one HTML file with no framework, build step or server. Open `index.html` in a browser, or use the live link above.
 
----
+Data is saved in your browser. Use **Reset demo data** in the footer (click twice) to start over. A sample device list is in `data/stl_laptop_refresh.csv`; the **Load sample list** button loads the same list.
 
-## 🚀 Quickstart & Local Setup
+## How it works
 
-```bash
-# 1. Clone the repository
-git clone [https://github.com/YOUR_USERNAME/free-geek-loop.git](https://github.com/YOUR_USERNAME/free-geek-loop.git)
-cd free-geek-loop
+- **Reuse fit score (0 to 100):** device type (laptop 45, desktop 25, monitor 20, printer -25) + age (4 years or less +35, 6 or less +22, 8 or less +8, older -15) + condition (working +20, minor wear +8, not working -20). 70+ is High reuse, 40 to 69 Medium, under 40 Recycle.
+- **Batch uniformity:** share of a pledge that is one model. 75%+ is a uniform batch, which FGT can refurbish in bulk.
+- **Demand Match:** laptops are ready 21 days after pickup; nonprofit requests are filled in need-by order from batches ready in time.
 
-# 2. Set up virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+Example: the St. Theresa of Lisieux CHS sample has 42 devices: 36 high reuse, 4 medium, 2 recycle, and 86% one model (a uniform batch).
 
-# 3. Install dependencies
-pip install -r requirements.txt
+All figures are illustrative estimates. Sample companies and organizations are demo data.
 
-# 4. Run application
-streamlit run src/main.py
+## Team
+
+[Name 1], [Name 2], [Name 3], [Name 4]

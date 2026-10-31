@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Free Geek Loop</title>
+<meta name="description" content="Free Geek Loop turns Toronto businesses' laptop refreshes into a predictable supply of devices for Free Geek Toronto to refurbish and sell.">
+<meta name="theme-color" content="#1d6b47">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%231d6b47' stroke-width='4' stroke-dasharray='58 18' stroke-linecap='round'/%3E%3Cpath d='M24 6 L28.5 10.5 L22.5 11.5 Z' fill='%23d98a1c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: app shell — top bar with three views (partner portal, FGT dashboard, impact report); content in a 1180px column, two-column work areas that stack on phones */
+:root {
+  --bg: #f4f6f3;
+  --surface: #ffffff;
+  --surface-2: #f3f6f2;
+  --ink: #14211a;
+  --muted: #56675d;
+  --line: #dde4de;
+  --accent: #1d6b47;
+  --accent-hover: #165837;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2efe7;
+  --signal: #d98a1c;
+  --high: #1d8a57;
+  --med: #c58712;
+  --low: #b5473a;
+  --high-soft: #ddf0e5;
+  --med-soft: #f8ecd2;
+  --low-soft: #f6e0dc;
+  --shadow: 0 1px 2px rgba(20,33,26,.04);
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Public Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1512; --surface: #17201b; --surface-2: #1c2721; --ink: #e5ece7; --muted: #95a69c; --line: #2b3832;
+    --accent: #4fbf88; --accent-hover: #6bcf9d; --accent-ink: #0c1a12; --accent-soft: #1f3529; --signal: #e8a849;
+    --high: #4fbf88; --med: #e2b049; --low: #e57c6f; --high-soft: #1d3428; --med-soft: #3a3020; --low-soft: #3d2420;
+    --shadow: 0 1px 2px rgba(0,0,0,.3);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1512; --surface: #17201b; --surface-2: #1c2721; --ink: #e5ece7; --muted: #95a69c; --line: #2b3832;
+  --accent: #4fbf88; --accent-hover: #6bcf9d; --accent-ink: #0c1a12; --accent-soft: #1f3529; --signal: #e8a849;
+  --high: #4fbf88; --med: #e2b049; --low: #e57c6f; --high-soft: #1d3428; --med-soft: #3a3020; --low-soft: #3d2420;
+  --shadow: 0 1px 2px rgba(0,0,0,.3);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-underline-offset: 2px; }
+svg.i { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(1.6rem, 3.4vw, 2.25rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+h2 { font-size: 1.25rem; font-weight: 700; }
+h3 { font-size: 1.02rem; font-weight: 700; }
+p { margin: 0; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.eyebrow { font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+
+/* Top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar-inner { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; column-gap: 24px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 1.12rem; padding-block: 12px; letter-spacing: -0.01em; }
+.brand-mark { width: 28px; height: 28px; flex: none; }
+.brand small { display: block; font-family: var(--f-body); font-weight: 500; font-size: 11.5px; color: var(--muted); letter-spacing: 0; }
+.tabs { display: flex; gap: 22px; margin-left: auto; align-self: stretch; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font: 600 14px var(--f-body); padding: 0 1px; min-height: 44px; cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
+.tab:hover { color: var(--ink); }
+.tab[aria-current="page"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab svg.i { color: var(--muted); }
+.tab[aria-current="page"] svg.i { color: var(--accent); }
+@media (max-width: 720px) { .tabs { margin-left: 0; width: 100%; gap: 18px; border-top: 1px solid var(--line); } }
+
+main { max-width: 1180px; margin: 0 auto; padding-block: 32px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 20px; }
+.view-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.view-head p { max-width: 62ch; margin-top: 6px; color: var(--muted); }
+.demo-pill { font: 600 11px var(--f-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--signal); border: 1px solid currentColor; padding: 3px 8px; border-radius: 99px; white-space: nowrap; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; box-shadow: var(--shadow); min-width: 0; }
+@media (max-width: 640px) { .panel { padding: 16px; } }
+
+/* What a partner gets */
+.perks { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 14px 0 0; padding: 0; list-style: none; font-size: 14px; font-weight: 600; }
+.perks li { display: inline-flex; align-items: center; gap: 7px; }
+.perks svg.i { color: var(--accent); }
+.panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.grid-2 { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.grid-2-even { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .grid-2, .grid-2-even { grid-template-columns: minmax(0,1fr); } }
+
+/* Loop strip */
+.loop { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--surface); }
+.loop-step { padding: 14px 16px; border-right: 1px solid var(--line); position: relative; min-width: 0; }
+.loop-step:last-child { border-right: 0; }
+.loop-step:not(:last-child)::after { content: ""; position: absolute; right: -5px; top: 22px; width: 8px; height: 8px; background: var(--surface); border-top: 1px solid var(--line); border-right: 1px solid var(--line); transform: rotate(45deg); z-index: 1; }
+.loop-step .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent-soft); font: 600 11px var(--f-mono); color: var(--accent); }
+.loop-step b { display: block; font-family: var(--f-display); font-size: .98rem; margin: 6px 0 2px; }
+.loop-step span { font-size: 12.5px; color: var(--muted); line-height: 1.35; display: block; }
+@media (max-width: 860px) { .loop { grid-template-columns: repeat(2, minmax(0,1fr)); } .loop-step { border-bottom: 1px solid var(--line); } .loop-step:nth-child(2n) { border-right: 0; } .loop-step::after { display: none; } .loop-step:nth-last-child(-n+2) { border-bottom: 0; } }
+
+/* Forms */
+label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--muted); }
+input, select { font: 400 14.5px var(--f-body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; min-width: 0; width: 100%; transition: border-color .15s; }
+input:hover, select:hover { border-color: var(--muted); }
+input:focus-visible, select:focus-visible, button:focus-visible, label.btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: 600 14px var(--f-body); padding: 8px 14px; border-radius: 7px; cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s; }
+.btn:hover { background: var(--surface-2); border-color: var(--muted); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn-small { padding: 5px 10px; font-size: 13px; }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--muted); }
+.btn-ghost:hover { border-color: transparent; color: var(--ink); }
+.btn-icon { padding: 6px; }
+.expand-btn svg.i { transition: transform .15s; }
+.expand-btn[aria-expanded="true"] svg.i { transform: rotate(90deg); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; padding: 9px 10px; background: var(--surface-2); border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+.pipeline tbody tr:hover > td { background: var(--surface-2); }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.items-table td { padding: 6px 4px; }
+.items-table td:first-child { padding-left: 8px; }
+.items-table input, .items-table select { padding: 6px 7px; font-size: 13.5px; }
+.items-table select[data-f="category"] { min-width: 96px; }
+.items-table input[data-f="make"] { min-width: 60px; }
+.items-table input[data-f="model"] { min-width: 90px; }
+.items-table select[data-f="condition"] { min-width: 116px; }
+.items-table .qty { width: 56px; }
+.items-table .yr { width: 68px; }
+.grid-portal { grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); }
+@media (max-width: 860px) { .grid-portal { grid-template-columns: minmax(0,1fr); } }
+
+/* Chips */
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.t-high { color: var(--high); background: var(--high-soft); }
+.t-med { color: var(--med); background: var(--med-soft); }
+.t-low { color: var(--low); background: var(--low-soft); }
+.chip-status { color: var(--accent); background: var(--accent-soft); }
+.chip-done { color: var(--muted); background: var(--surface-2); }
+
+/* Fit analysis */
+.stackbar { display: flex; height: 14px; border-radius: 99px; overflow: hidden; background: var(--surface-2); }
+.stackbar > div { height: 100%; }
+.seg-high { background: var(--high); } .seg-med { background: var(--med); } .seg-low { background: var(--low); }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin-top: 8px; }
+.legend span { display: inline-flex; gap: 6px; align-items: center; }
+.legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.statgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; }
+.statgrid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stat { background: var(--surface-2); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.stat .v { font: 700 1.45rem var(--f-display); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.stat .k { font-size: 12px; color: var(--muted); font-weight: 600; }
+.callout { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 13.5px; }
+.callout.warn { border-color: var(--signal); background: var(--med-soft); }
+.match-list { display: grid; gap: 8px; }
+.match { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.match .meta { font-size: 12.5px; color: var(--muted); grid-column: 1 / -1; }
+.progress { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; grid-column: 1 / -1; }
+.progress > div { height: 100%; background: var(--accent); }
+
+/* Status stepper */
+.stepper { display: flex; gap: 3px; }
+.stepper i { flex: 1; height: 5px; border-radius: 3px; background: var(--line); min-width: 10px; }
+.stepper i.on { background: var(--accent); }
+.pledge-card { border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 10px; }
+.pledge-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.pledge-cards { display: grid; gap: 12px; }
+
+/* KPI row */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 860px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; }
+.kpi .v { font: 700 1.75rem var(--f-display); margin: 4px 0 2px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.kpi .k { font-size: 12.5px; font-weight: 600; color: var(--muted); }
+.kpi .s { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* Forecast chart */
+.chart-wrap { overflow-x: auto; }
+.forecast { display: grid; grid-template-columns: repeat(12, minmax(46px, 1fr)); gap: 8px; align-items: end; min-width: 600px; padding-top: 8px; }
+.col { display: grid; gap: 6px; justify-items: center; cursor: pointer; border: 0; background: transparent; padding: 4px 2px; border-radius: 8px; color: var(--ink); font: inherit; }
+.col:hover { background: var(--surface-2); }
+.col[aria-pressed="true"] { background: var(--accent-soft); }
+.col .bars { height: 170px; width: 100%; max-width: 40px; display: flex; flex-direction: column-reverse; justify-content: flex-start; position: relative; }
+.col .bars > div { width: 100%; }
+.col .bars > div:last-child { border-radius: 5px 5px 0 0; }
+.col .tot { font: 600 12px var(--f-mono); }
+.col .mo { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+.col .dm { font: 600 10.5px var(--f-mono); color: var(--signal); min-height: 14px; }
+.baseline { height: 1px; background: var(--line); }
+
+/* Impact report */
+.report { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
+.report-head { background: var(--accent); color: var(--accent-ink); padding: 28px 24px; display: grid; gap: 6px; }
+:root[data-theme="dark"] .report-head { background: #1d6b47; color: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .report-head { background: #1d6b47; color: #fff; } }
+.report-head .eyebrow { color: var(--accent-ink); opacity: .8; }
+.report-head h2 { font-size: clamp(1.4rem, 3vw, 2rem); }
+.report-body { padding: 22px 24px; display: grid; gap: 20px; }
+.big-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 640px) { .big-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.big-stats .stat .v { font-size: 1.9rem; }
+.share { background: var(--surface-2); border-radius: 10px; padding: 14px; font-size: 14px; white-space: pre-wrap; }
+.org-list { display: grid; gap: 6px; }
+.org-list div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--line); padding-bottom: 6px; }
+
+
+/* Toast */
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 20; max-width: calc(100vw - 32px); }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.err { color: var(--low); font-size: 13px; font-weight: 600; }
+.empty { padding: 18px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 10px; font-size: 14px; }
+footer { max-width: 1180px; margin: 0 auto; padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); border-top: 1px solid var(--line); }
+footer .links { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Print: the impact report saves as a clean one-page PDF */
+@media print {
+  body { background: #fff; }
+  .topbar, footer, .toast, .view-head, .imp-controls, .no-print { display: none !important; }
+  main { padding: 0; }
+  .report { border: 0; box-shadow: none; }
+  .report-head, .seg-high, .stat { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .grid-2-even { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="58 18" stroke-linecap="round"/><path d="M24 6 L28.5 10.5 L22.5 11.5 Z" fill="var(--signal)"/></svg>
+      <div>Free Geek Loop<small>Laptop donations from local organizations to Free Geek Toronto</small></div>
+    </div>
+    <nav class="tabs" aria-label="Views">
+      <button class="tab" data-view="portal"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/></svg>Partner portal</button>
+      <button class="tab" data-view="dashboard"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>FGT dashboard</button>
+      <button class="tab" data-view="impact"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21c0-9 5-15 15-16-1 10-7 15-15 16z"/><path d="M5 21l7-7"/></svg>Impact report</button>
+    </nav>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  <span>Prototype for FUSE Blueprint 2026. Companies, community organizations and figures shown are demo data.</span>
+  <span class="links"><a href="https://github.com/C1vical/free-geek-loop" target="_blank" rel="noopener">Source on GitHub</a><button class="btn btn-small btn-ghost" data-act="reset">Reset demo data</button></span>
+</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- constants ----------
+  const CATS = ["Laptop", "Desktop", "Monitor", "Tablet", "Phone", "Peripheral", "Printer", "Other"];
+  const CONDS = ["Working", "Minor wear", "Not working"];
+  const AREAS = ["Downtown", "Midtown", "East York", "Etobicoke", "North York", "Scarborough", "York Region", "Peel Region", "Outside Toronto"];
+  const STATUSES = ["Pledged", "Pickup scheduled", "Received", "Wiped & tested", "Refurbished", "Deployed"];
+  const BASE = { Laptop: 45, Desktop: 25, Monitor: 20, Tablet: 20, Phone: 10, Peripheral: 10, Printer: -25, Other: 0 };
+  const KG = { Laptop: 2.2, Desktop: 8, Monitor: 5, Tablet: 0.6, Phone: 0.2, Peripheral: 0.5, Printer: 9, Other: 2 };
+  const CO2 = { Laptop: 250, Desktop: 400, Monitor: 300, Tablet: 100, Phone: 60, Peripheral: 10, Printer: 0, Other: 0 };
+  const PROCESS_DAYS = 21;
+  const AVG_PRICE = 175; // average FGT laptop sale price, used for the staff resale estimate
+  const NOW = new Date();
+  const TODAY = new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate());
+  const YEAR = TODAY.getFullYear();
+  const STORE_KEY = "fg-loop-demo-v5";
+
+  const SAMPLE_CSV = [
+    "category,make,model,year,quantity,condition",
+    "Laptop,Dell,Latitude 3420,2022,36,Working",
+    "Laptop,Dell,Latitude 3400,2019,4,Minor wear",
+    "Printer,HP,LaserJet P2055,2010,2,Working"
+  ].join("\n");
+
+  // ---------- seed data ----------
+  function seed() {
+    return {
+      currentCompany: "",
+      companies: [
+        { id: "stl", name: "St. Theresa of Lisieux CHS", contact: "IT lead, STL Robotics", employees: 110, area: "York Region", cycle: 4 },
+        { id: "harbourline", name: "Harbourline Accounting LLP", contact: "Dev Patel, Operations manager", employees: 85, area: "Downtown", cycle: 4 },
+        { id: "liberty", name: "Liberty Village Software", contact: "Sam Okafor, IT", employees: 40, area: "Downtown", cycle: 3 },
+        { id: "danforth", name: "Danforth Dental Group", contact: "Lena Fischer, Office manager", employees: 25, area: "East York", cycle: 5 },
+        { id: "queenwest", name: "Queen West Studio", contact: "Ari Cohen, Studio manager", employees: 22, area: "Downtown", cycle: 3 },
+        { id: "annex", name: "Annex Family Health Team", contact: "Grace Liu, IT coordinator", employees: 48, area: "Midtown", cycle: 4 },
+        { id: "kensington", name: "Kensington Legal LLP", contact: "Priya Nair, IT", employees: 30, area: "Downtown", cycle: 4 },
+        { id: "junction", name: "Junction Credit Union", contact: "Marc Belanger, IT director", employees: 120, area: "Etobicoke", cycle: 4 }
+      ],
+      pledges: [
+        { id: "p1", companyId: "harbourline", refreshDate: "2026-09-14", area: "Downtown", status: 5, pickupDate: "2026-09-16",
+          items: [
+            { category: "Laptop", make: "Dell", model: "Latitude 5410", year: 2020, qty: 34, condition: "Working" },
+            { category: "Laptop", make: "Dell", model: "Latitude 5410", year: 2020, qty: 4, condition: "Minor wear" },
+            { category: "Laptop", make: "Dell", model: "Latitude 5410", year: 2020, qty: 2, condition: "Not working" },
+            { category: "Peripheral", make: "Dell", model: "WD19 dock", year: 2020, qty: 12, condition: "Working" }],
+          outcome: { reused: 48, recycled: 4, orgs: [["Scarborough Seniors Digital Club", 14], ["Thorncliffe Park Homework Hub", 20]] } },
+        { id: "p2", companyId: "liberty", refreshDate: "2026-12-07", area: "Downtown", status: 1, pickupDate: "2026-12-09",
+          items: [
+            { category: "Laptop", make: "Lenovo", model: "ThinkPad T14 Gen 2", year: 2021, qty: 21, condition: "Working" },
+            { category: "Laptop", make: "Lenovo", model: "ThinkPad T14 Gen 2", year: 2021, qty: 3, condition: "Minor wear" },
+            { category: "Monitor", make: "Dell", model: "P2422H", year: 2021, qty: 16, condition: "Working" }] },
+        { id: "p3", companyId: "danforth", refreshDate: "2027-02-08", area: "East York", status: 0, pickupDate: "",
+          items: [
+            { category: "Desktop", make: "HP", model: "ProDesk 400 G6 SFF", year: 2019, qty: 10, condition: "Working" },
+            { category: "Monitor", make: "Samsung", model: "S24F350", year: 2017, qty: 8, condition: "Minor wear" },
+            { category: "Printer", make: "Brother", model: "HL-L2350DW", year: 2016, qty: 1, condition: "Not working" }] },
+        { id: "p4", companyId: "queenwest", refreshDate: "2027-04-12", area: "Downtown", status: 0, pickupDate: "",
+          items: [
+            { category: "Laptop", make: "Apple", model: "MacBook Air M1", year: 2020, qty: 15, condition: "Working" },
+            { category: "Laptop", make: "Apple", model: "MacBook Air M1", year: 2020, qty: 3, condition: "Minor wear" }] },
+        { id: "p5", companyId: "annex", refreshDate: "2027-04-26", area: "Midtown", status: 0, pickupDate: "",
+          items: [
+            { category: "Laptop", make: "Dell", model: "Latitude 5420", year: 2021, qty: 28, condition: "Working" },
+            { category: "Laptop", make: "Dell", model: "Latitude 5420", year: 2021, qty: 2, condition: "Not working" },
+            { category: "Peripheral", make: "Dell", model: "65W USB-C charger", year: 2021, qty: 30, condition: "Working" }] },
+        { id: "p6", companyId: "kensington", refreshDate: "2027-05-17", area: "Downtown", status: 0, pickupDate: "",
+          items: [{ category: "Laptop", make: "Lenovo", model: "ThinkPad X1 Carbon Gen 9", year: 2021, qty: 25, condition: "Working" }] },
+        { id: "p7", companyId: "junction", refreshDate: "2027-06-21", area: "Etobicoke", status: 0, pickupDate: "",
+          items: [
+            { category: "Laptop", make: "HP", model: "EliteBook 840 G8", year: 2021, qty: 52, condition: "Working" },
+            { category: "Laptop", make: "HP", model: "EliteBook 840 G8", year: 2021, qty: 6, condition: "Minor wear" },
+            { category: "Laptop", make: "HP", model: "EliteBook 840 G8", year: 2021, qty: 2, condition: "Not working" }] }
+      ],
+      demands: [
+        { id: "d1", org: "Scarborough Seniors Digital Club", qty: 8, needBy: "2027-01-15", budget: 960, purpose: "Loaner laptops for a weekly digital-skills class" },
+        { id: "d2", org: "East End Homework Club", qty: 15, needBy: "2027-02-26", budget: 1800, purpose: "Take-home laptops for grade 9–12 students without a computer at home" },
+        { id: "d3", org: "Parkdale Youth Centre", qty: 20, needBy: "2027-03-31", budget: 2400, purpose: "Spring coding club and job-search lab" },
+        { id: "d4", org: "Newcomer Support Toronto", qty: 12, needBy: "2027-04-15", budget: 1440, purpose: "Laptops for newcomer employment workshops" },
+        { id: "d5", org: "Weston Job Skills Program", qty: 10, needBy: "2027-06-30", budget: 1200, purpose: "Resume and interview prep lab" }
+      ],
+      draft: freshDraft()
+    };
+  }
+  const blankRow = () => ({ category: "", make: "", model: "", year: "", qty: "", condition: "" });
+  function freshDraft(area) {
+    return { refreshDate: "2027-02-16", area: area || "", items: [blankRow()], csvError: "", fileName: "" };
+  }
+
+  let S;
+  try { const raw = localStorage.getItem(STORE_KEY); S = raw ? JSON.parse(raw) : seed(); } catch (e) { S = seed(); }
+  if (!S || !S.companies) S = seed();
+  const ui = { view: "portal", month: null, expanded: {}, showRegister: false, impactCompany: null, impactPledge: "all", pickupFor: null };
+
+  function save() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (e) { /* storage unavailable: demo keeps working in memory */ } }
+
+  // ---------- helpers ----------
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = (n) => Math.round(n).toLocaleString("en-CA");
+  const money = (n) => "$" + Math.round(n).toLocaleString("en-CA");
+  function parseISO(s) { const [y, m, d] = String(s).split("-").map(Number); return new Date(y, (m || 1) - 1, d || 1); }
+  function toISO(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function fmtDate(s) { if (!s) return "—"; return parseISO(s).toLocaleDateString("en-CA", { month: "short", day: "numeric", year: "numeric" }); }
+  function addDays(s, n) { const d = parseISO(s); d.setDate(d.getDate() + n); return toISO(d); }
+  function monthKey(s) { return s.slice(0, 7); }
+  function uid(p) { return p + Math.random().toString(36).slice(2, 8); }
+  function company(id) { return S.companies.find((c) => c.id === id); }
+  const placeholder = (label, chosen) => '<option value=""' + (chosen ? "" : " selected") + " disabled>" + label + "</option>";
+  const freshFor = () => freshDraft((company(S.currentCompany) || {}).area);
+  function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove("show"), 3200); }
+
+  // ---------- fit scoring ----------
+  function scoreItem(it) {
+    let s = BASE[it.category] != null ? BASE[it.category] : 0;
+    const yr = Number(it.year);
+    if (!yr) s += 10;
+    else { const age = YEAR - yr; s += age <= 4 ? 35 : age <= 6 ? 22 : age <= 8 ? 8 : -15; }
+    s += it.condition === "Working" ? 20 : it.condition === "Minor wear" ? 8 : -20;
+    s = Math.max(0, Math.min(100, s));
+    const tier = s >= 70 ? "high" : s >= 40 ? "med" : "low";
+    return { score: s, tier };
+  }
+  const ICON = {
+    x: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    chev: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+    check: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>',
+    upload: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V4M7 9l5-5 5 5M4 20h16"/></svg>',
+    file: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/></svg>',
+    plus: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    copy: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h8"/></svg>',
+    print: '<svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2"/><rect x="6" y="14" width="12" height="7"/></svg>'
+  };
+  const TIER_LABEL = { high: "High reuse", med: "Medium", low: "Recycle" };
+  function tierChip(t) { return '<span class="chip t-' + t + '">' + TIER_LABEL[t] + "</span>"; }
+
+  function analyse(items) {
+    const r = { total: 0, high: 0, med: 0, low: 0, laptops: 0, readyLaptops: 0, kg: 0, uniformity: 0, topModel: "", groups: {} };
+    items.forEach((it) => {
+      const q = Math.max(0, Number(it.qty) || 0);
+      if (!q) return;
+      const { tier } = scoreItem(it);
+      r.total += q; r[tier] += q;
+      if (it.category === "Laptop") { r.laptops += q; if (tier === "high") r.readyLaptops += q; }
+      r.kg += q * (KG[it.category] || 2);
+      const key = (it.category + " " + (it.make || "") + " " + (it.model || "")).trim();
+      r.groups[key] = (r.groups[key] || 0) + q;
+    });
+    let top = 0;
+    Object.entries(r.groups).forEach(([k, v]) => { if (v > top) { top = v; r.topModel = k; } });
+    r.uniformity = r.total ? top / r.total : 0;
+    r.grade = r.uniformity >= 0.75 ? "Uniform batch" : r.uniformity >= 0.5 ? "Mostly uniform" : "Mixed batch";
+    return r;
+  }
+
+  // ---------- demand matching ----------
+  function readyDate(p) { return addDays(p.pickupDate || p.refreshDate, PROCESS_DAYS); }
+  function computeMatches(extra) {
+    const pledges = S.pledges.filter((p) => p.status < 5).concat(extra ? [extra] : []);
+    const supply = pledges.map((p) => ({ p, ready: readyDate(p), left: analyse(p.items).readyLaptops })).sort((a, b) => a.ready.localeCompare(b.ready));
+    const todayISO = toISO(TODAY);
+    const demands = S.demands.filter((d) => d.needBy >= todayISO).slice().sort((a, b) => a.needBy.localeCompare(b.needBy));
+    const allocs = [];
+    demands.forEach((d) => {
+      let need = d.qty;
+      supply.forEach((s) => {
+        if (need <= 0 || s.left <= 0 || s.ready > d.needBy) return;
+        const take = Math.min(need, s.left);
+        s.left -= take; need -= take;
+        allocs.push({ demandId: d.id, pledgeId: s.p.id, qty: take });
+      });
+    });
+    const byDemand = {}, byPledge = {};
+    allocs.forEach((a) => {
+      (byDemand[a.demandId] = byDemand[a.demandId] || []).push(a);
+      (byPledge[a.pledgeId] = byPledge[a.pledgeId] || []).push(a);
+    });
+    return { allocs, byDemand, byPledge, demands };
+  }
+  function demandById(id) { return S.demands.find((d) => d.id === id); }
+
+  // ---------- CSV ----------
+  function parseCSVLine(line) {
+    const out = []; let cur = "", q = false;
+    for (let i = 0; i < line.length; i++) {
+      const c = line[i];
+      if (q) { if (c === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (c === '"') q = false; else cur += c; }
+      else if (c === '"') q = true; else if (c === ",") { out.push(cur); cur = ""; } else cur += c;
+    }
+    out.push(cur);
+    return out.map((s) => s.trim());
+  }
+  function normCat(s) {
+    const v = String(s).toLowerCase();
+    if (/laptop|notebook|macbook|thinkpad|chromebook/.test(v)) return "Laptop";
+    if (/desktop|tower|pc|workstation|all-in-one/.test(v)) return "Desktop";
+    if (/monitor|display|screen/.test(v)) return "Monitor";
+    if (/tablet|ipad/.test(v)) return "Tablet";
+    if (/phone|mobile|iphone|android/.test(v)) return "Phone";
+    if (/printer|copier|scanner/.test(v)) return "Printer";
+    if (/dock|keyboard|mouse|charger|cable|peripheral|accessor|headset|webcam/.test(v)) return "Peripheral";
+    return "Other";
+  }
+  function normCond(s) {
+    const v = String(s).toLowerCase();
+    if (/not|broken|dead|fail|parts/.test(v)) return "Not working";
+    if (/minor|wear|scratch|fair|used/.test(v)) return "Minor wear";
+    return "Working";
+  }
+  function parseCSV(text) {
+    const lines = text.replace(/\r/g, "").split("\n").filter((l) => l.trim());
+    if (lines.length < 2) throw new Error("The file needs a header row and at least one device row.");
+    const head = parseCSVLine(lines[0]).map((h) => h.toLowerCase());
+    const idx = (names) => head.findIndex((h) => names.some((n) => h.includes(n)));
+    const ci = idx(["category", "type"]), mk = idx(["make", "brand", "manufacturer"]), md = idx(["model"]), yr = idx(["year"]), qt = idx(["qty", "quantity", "count"]), cd = idx(["condition", "status"]);
+    if (ci < 0 || qt < 0) throw new Error("Missing columns. The header needs at least 'category' and 'quantity'.");
+    const items = lines.slice(1).map((l) => {
+      const c = parseCSVLine(l);
+      return { category: normCat(c[ci] || ""), make: mk >= 0 ? c[mk] : "", model: md >= 0 ? c[md] : "", year: yr >= 0 ? Number(c[yr]) || "" : "", qty: Math.max(0, parseInt(c[qt], 10) || 0), condition: cd >= 0 ? normCond(c[cd]) : "Working" };
+    }).filter((it) => it.qty > 0);
+    if (!items.length) throw new Error("No rows with a quantity above zero were found.");
+    return items;
+  }
+
+  // ---------- views ----------
+  function render() {
+    document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-current", t.dataset.view === ui.view ? "page" : "false"));
+    const app = $("#app");
+    if (ui.view === "portal") app.innerHTML = viewPortal();
+    else if (ui.view === "dashboard") app.innerHTML = viewDashboard();
+    else app.innerHTML = viewImpact();
+    if (ui.view === "portal") renderAnalysis();
+  }
+
+  function loopStrip() {
+    const steps = [
+      ["Plan", "Tell FGT when you'll replace your laptops"],
+      ["Pledge", "Upload your list; we check what's worth fixing"],
+      ["Collect", "FGT's pickup service brings them in"],
+      ["Refurbish", "Data wiped, tested and repaired by FGT"],
+      ["Match", "Laptops go to nonprofits that asked for them"],
+      ["Report", "You get a report to share with your community"]
+    ];
+    return '<div class="loop" aria-label="How Free Geek Loop works">' + steps.map((s, i) => '<div class="loop-step"><span class="n">' + (i + 1) + "</span><b>" + s[0] + "</b><span>" + s[1] + "</span></div>").join("") + "</div>";
+  }
+
+  // ----- Partner portal -----
+  function viewPortal() {
+    const c = company(S.currentCompany);
+    const mine = c ? S.pledges.filter((p) => p.companyId === c.id).sort((a, b) => b.refreshDate.localeCompare(a.refreshDate)) : [];
+    const m = computeMatches();
+    const opts = placeholder("Select an organization…", c) + S.companies.map((x) => '<option value="' + x.id + '"' + (c && x.id === c.id ? " selected" : "") + ">" + esc(x.name) + "</option>").join("");
+    return '' +
+      '<div class="view-head"><div><div class="eyebrow">Partner portal</div><h1>Turn your next laptop refresh into community access</h1><p>Tell Free Geek Toronto what you plan to retire and when. We check what can be reused before anyone drives out, pick it up, and show you exactly where your laptops went.</p>' +
+      '<ul class="perks">' + ["Pickup from your office", "Secure data wiping", "A shareable impact report"].map((t) => "<li>" + ICON.check + t + "</li>").join("") + "</ul></div>" +
+      '<span class="demo-pill">Demo data</span></div>' +
+      loopStrip() +
+      '<section class="panel"><div class="panel-head">' + (c
+        ? '<div><div class="eyebrow">Signed in as</div><h2>' + esc(c.name) + '</h2><p class="muted small">' + esc(c.contact) + " · " + c.employees + " staff · " + esc(c.area) + " · Refreshes every " + c.cycle + " years</p></div>"
+        : '<div><div class="eyebrow">Your organization</div><h2>Choose your organization</h2><p class="muted small">Pick your organization, or register it if it\'s new to Free Geek Loop.</p></div>') +
+      '<div class="btn-row"><label style="min-width:220px">' + (c ? "Switch organization" : "Organization") + '<select id="companySel">' + opts + '</select></label><button class="btn" data-act="toggle-register">' + (ui.showRegister ? "Close" : "Register your organization") + "</button></div></div>" +
+      (ui.showRegister ? registerForm() : "") +
+      (!c ? "" : '<h3 style="margin:6px 0 10px">Your Loop</h3>' +
+      (mine.length ? '<div class="pledge-cards">' + mine.map((p) => pledgeCard(p, m)).join("") + "</div>" : '<div class="empty">No pledges yet. Create your first one below to add your devices to FGT\'s supply forecast.</div>')) +
+      "</section>" +
+      '<div class="grid-2 grid-portal">' +
+      '<section class="panel"><div class="panel-head"><div><div class="eyebrow">New pledge</div><h2>What are you retiring?</h2></div></div>' +
+      '<div class="form-row"><label>Refresh date<input type="date" id="dRefresh" value="' + esc(S.draft.refreshDate) + '"></label><label>Pickup area<select id="dArea">' + placeholder("Select an area…", S.draft.area) + AREAS.map((a) => "<option" + (a === S.draft.area ? " selected" : "") + ">" + a + "</option>").join("") + "</select></label></div>" +
+      '<div style="margin:16px 0 8px" class="btn-row"><label class="btn btn-small" for="csvFile" style="display:inline-flex;color:var(--ink)">' + ICON.upload + 'Upload CSV</label><input type="file" id="csvFile" accept=".csv,text/csv" hidden>' +
+      '<button class="btn btn-small" data-act="sample">' + ICON.file + 'Load sample list</button><button class="btn btn-small btn-ghost" data-act="copy-template">' + ICON.copy + "Copy CSV template</button></div>" +
+      (S.draft.fileName ? '<p class="small muted" style="margin-bottom:8px">Loaded <span class="mono">' + esc(S.draft.fileName) + "</span></p>" : "") +
+      (S.draft.csvError ? '<p class="err" style="margin-bottom:8px">' + esc(S.draft.csvError) + "</p>" : "") +
+      '<div class="table-wrap"><table class="items-table"><thead><tr><th>Type</th><th>Make</th><th>Model</th><th>Year</th><th>Qty</th><th>Condition</th><th>Fit</th><th></th></tr></thead><tbody id="itemRows">' + itemRows() + "</tbody></table></div>" +
+      '<div class="btn-row" style="margin-top:12px;justify-content:space-between"><button class="btn btn-small" data-act="add-row">' + ICON.plus + 'Add device row</button><button class="btn btn-primary" data-act="submit-pledge">Create pledge</button></div>' +
+      "</section>" +
+      '<section class="panel" id="analysis" aria-live="polite"></section>' +
+      "</div>" +
+      requestsSection(m);
+  }
+
+  function registerForm() {
+    return '<form id="regForm" class="panel" style="box-shadow:none;background:var(--surface-2);margin-bottom:16px"><h3 style="margin-bottom:10px">Register your organization</h3>' +
+      '<div class="form-row"><label>Organization name<input id="rName" required placeholder="e.g. Riverdale Design Co."></label><label>Contact<input id="rContact" placeholder="Name, role"></label><label>Staff<input id="rEmp" type="number" min="1" value="25"></label>' +
+      '<label>Area<select id="rArea" required>' + placeholder("Select an area…") + AREAS.map((a) => "<option>" + a + "</option>").join("") + '</select></label><label>Refresh cycle (years)<select id="rCycle" required>' + placeholder("Select…") + '<option>2</option><option>3</option><option>4</option><option>5</option></select></label></div>' +
+      '<div class="btn-row" style="margin-top:12px"><button class="btn btn-primary" type="submit">Register and switch</button></div></form>';
+  }
+
+  function pledgeCard(p, m) {
+    const a = analyse(p.items);
+    const allocs = m.byPledge[p.id] || [];
+    const matched = allocs.reduce((s, x) => s + x.qty, 0);
+    const done = p.status >= 5;
+    const steps = STATUSES.map((_, i) => '<i class="' + (i <= p.status ? "on" : "") + '"></i>').join("");
+    let action = "";
+    if (p.status === 0) {
+      action = ui.pickupFor === p.id
+        ? '<div class="btn-row"><label>Pickup date<input type="date" id="pickDate" value="' + esc(p.refreshDate) + '"></label><button class="btn btn-primary btn-small" data-act="confirm-pickup" data-id="' + p.id + '" style="align-self:end">Confirm pickup</button><button class="btn btn-small btn-ghost" data-act="cancel-pickup" style="align-self:end">Cancel</button></div>'
+        : '<button class="btn btn-small btn-primary" data-act="schedule" data-id="' + p.id + '">Schedule pickup</button>';
+    }
+    return '<div class="pledge-card"><div class="pledge-top"><div><b class="mono">' + a.total + ' devices</b> <span class="muted">· refresh ' + fmtDate(p.refreshDate) + "</span></div>" +
+      '<span class="chip ' + (done ? "chip-done" : "chip-status") + '">' + STATUSES[p.status] + "</span></div>" +
+      '<div class="stepper" aria-label="Status ' + (p.status + 1) + " of 6\">" + steps + "</div>" +
+      '<div class="small muted">' + a.high + " high reuse · " + a.med + " medium · " + a.low + " recycle · " + a.grade +
+      (p.pickupDate ? " · pickup " + fmtDate(p.pickupDate) : "") +
+      (done ? "" : " · " + matched + " laptops already matched to nonprofits") + "</div>" +
+      '<div class="btn-row">' + action + '<button class="btn btn-small" data-act="go-impact" data-id="' + p.id + '">' + (done ? "View impact report" : "Preview impact") + "</button></div></div>";
+  }
+
+  function itemRows() {
+    return S.draft.items.map((it, i) => {
+      const f = scoreItem(it);
+      return "<tr>" +
+        '<td><select data-row="' + i + '" data-f="category" aria-label="Device type">' + placeholder("Select…", it.category) + CATS.map((c) => "<option" + (c === it.category ? " selected" : "") + ">" + c + "</option>").join("") + "</select></td>" +
+        '<td><input data-row="' + i + '" data-f="make" value="' + esc(it.make) + '" placeholder="Dell" aria-label="Make"></td>' +
+        '<td><input data-row="' + i + '" data-f="model" value="' + esc(it.model) + '" placeholder="Latitude 5420" aria-label="Model"></td>' +
+        '<td><input class="yr" type="number" min="1995" max="' + YEAR + '" data-row="' + i + '" data-f="year" value="' + esc(it.year) + '" aria-label="Year"></td>' +
+        '<td><input class="qty" type="number" min="0" data-row="' + i + '" data-f="qty" value="' + esc(it.qty) + '" aria-label="Quantity"></td>' +
+        '<td><select data-row="' + i + '" data-f="condition" aria-label="Condition">' + placeholder("Select…", it.condition) + CONDS.map((c) => "<option" + (c === it.condition ? " selected" : "") + ">" + c + "</option>").join("") + "</select></td>" +
+        '<td id="fit-' + i + '">' + fitCell(it) + "</td>" +
+        '<td><button class="btn btn-small btn-ghost" data-act="del-row" data-i="' + i + '" aria-label="Remove row">' + ICON.x + "</button></td></tr>";
+    }).join("");
+  }
+
+  // no fit rating until the row has a type, condition and quantity
+  function fitCell(it) { return it.category && it.condition && Number(it.qty) > 0 ? tierChip(scoreItem(it).tier) : '<span class="muted">—</span>'; }
+
+  function draftPledge() {
+    return { id: "draft", companyId: S.currentCompany, refreshDate: S.draft.refreshDate, area: S.draft.area, status: 0, pickupDate: "", items: S.draft.items };
+  }
+
+  function renderAnalysis() {
+    const el = $("#analysis"); if (!el) return;
+    const a = analyse(S.draft.items);
+    S.draft.items.forEach((it, i) => { const c = $("#fit-" + i); if (c) c.innerHTML = fitCell(it); });
+    if (!a.total) { el.innerHTML = '<div class="eyebrow">Device fit check</div><h2 style="margin:4px 0 12px">Reuse analysis</h2><div class="empty">Add devices or load the sample CSV to see how much of this batch FGT can refurbish.</div>'; return; }
+    const pct = (n) => (100 * n / a.total).toFixed(1) + "%";
+    const m = computeMatches(S.draft.refreshDate ? draftPledge() : null);
+    const mine = m.byPledge["draft"] || [];
+    const matched = mine.reduce((s, x) => s + x.qty, 0);
+    const ready = readyDate(draftPledge());
+    let note;
+    if (a.uniformity >= 0.75) note = '<div class="callout"><b>' + Math.round(a.uniformity * 100) + "% of devices are one model</b> (" + esc(a.topModel) + "). FGT volunteers can image, test and repair them as a batch.</div>";
+    else if (a.low / a.total > 0.4) note = '<div class="callout warn"><b>' + pct(a.low) + " of this pledge is low reuse.</b> These items will be responsibly recycled. Consider sending only computers and accessories.</div>";
+    else note = '<div class="callout warn"><b>Mixed batch.</b> Mixed models take longer to refurbish. Grouping identical devices into one pledge helps FGT process them faster.</div>';
+    el.innerHTML = '<div class="eyebrow">Device fit check</div><h2 style="margin:4px 0 12px">Reuse analysis</h2>' +
+      '<div class="statgrid" style="margin-bottom:14px"><div class="stat"><div class="v">' + a.total + '</div><div class="k">devices detected</div></div><div class="stat"><div class="v">' + a.readyLaptops + '</div><div class="k">reuse-ready laptops</div></div><div class="stat"><div class="v">' + fmt(a.kg) + ' kg</div><div class="k">kept out of landfill</div></div></div>' +
+      '<div class="stackbar" role="img" aria-label="' + a.high + " high, " + a.med + " medium, " + a.low + ' recycle"><div class="seg-high" style="width:' + pct(a.high) + '"></div><div class="seg-med" style="width:' + pct(a.med) + '"></div><div class="seg-low" style="width:' + pct(a.low) + '"></div></div>' +
+      '<div class="legend"><span><i class="seg-high"></i>' + a.high + ' high reuse</span><span><i class="seg-med"></i>' + a.med + ' medium</span><span><i class="seg-low"></i>' + a.low + " recycle</span></div>" +
+      '<div style="margin:14px 0">' + note + "</div>" +
+      '<h3 style="margin-bottom:4px">Nonprofits these laptops can go to</h3><p class="small muted" style="margin-bottom:10px">Refurbished and ready around ' + fmtDate(ready) + "</p>" +
+      (mine.length ? '<div class="match-list">' + mine.map((x) => { const d = demandById(x.demandId); return '<div class="match"><b>' + esc(d.org) + '</b><span class="mono">' + x.qty + " laptops</span><span class=\"meta\">Needed by " + fmtDate(d.needBy) + " · " + esc(d.purpose) + "</span></div>"; }).join("") + "</div>" +
+        '<p class="small" style="margin-top:10px"><b class="mono">' + matched + " / " + a.readyLaptops + "</b> reuse-ready laptops matched</p>"
+        : '<div class="empty">No open requests line up with this date yet. Your laptops still go into FGT\'s store for students, seniors and newcomers.</div>');
+  }
+
+  // ----- Nonprofit requests (shown under the pledge form) -----
+  function requestsSection(m) {
+    const rows = m.demands.map((d) => {
+      const al = m.byDemand[d.id] || []; const got = al.reduce((s, x) => s + x.qty, 0); const pct = Math.min(100, got / d.qty * 100);
+      const src = al.map((x) => { const p = S.pledges.find((pp) => pp.id === x.pledgeId); return x.qty + " from " + esc(company(p.companyId).name); }).join(", ");
+      return '<div class="match"><b>' + esc(d.org) + '</b><span class="mono">' + got + " / " + d.qty + '</span><div class="progress"><div style="width:' + pct + "%;background:" + (got >= d.qty ? "var(--high)" : got ? "var(--med)" : "var(--low)") + '"></div></div><span class="meta">Needed by ' + fmtDate(d.needBy) + " · budget " + money(d.budget) + " · " + (src || "no incoming supply before this date yet") + "</span></div>";
+    }).join("");
+    return '<div class="grid-2-even" id="requests"><section class="panel"><div class="panel-head"><div><div class="eyebrow">Nonprofit requests</div><h2>Who is waiting for laptops</h2><p class="small muted" style="margin-top:4px">Pledges are matched to the earliest requests they can be ready for.</p></div></div><div class="match-list">' + (rows || '<div class="empty">No open requests.</div>') + "</div></section>" +
+      '<section class="panel"><div class="eyebrow">Log a request</div><h2 style="margin:4px 0 12px">Request laptops for a nonprofit</h2><form id="demandForm" style="display:grid;gap:12px">' +
+      '<label>Organization<input id="dmOrg" required placeholder="e.g. Regent Park Learning Lab"></label>' +
+      '<div class="form-row"><label>Laptops needed<input id="dmQty" type="number" min="1" value="10" required></label><label>Needed by<input id="dmDate" type="date" required value="' + addDays(toISO(TODAY), 120) + '"></label><label>Budget ($)<input id="dmBudget" type="number" min="0" value="1200"></label></div>' +
+      '<label>Purpose<input id="dmPurpose" placeholder="What the laptops are for"></label><div><button class="btn btn-primary" type="submit">Log request and re-match</button></div></form></section></div>';
+  }
+
+  // ----- Dashboard -----
+  function months12() {
+    const out = []; const d = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
+    for (let i = 0; i < 12; i++) { out.push(toISO(d).slice(0, 7)); d.setMonth(d.getMonth() + 1); }
+    return out;
+  }
+  function viewDashboard() {
+    const open = S.pledges.filter((p) => p.status < 5);
+    const m = computeMatches();
+    let devices = 0, laptops = 0, high = 0, ready = 0, next90 = 0;
+    const in90 = toISO(new Date(TODAY.getTime() + 90 * 864e5)), todayISO = toISO(TODAY);
+    open.forEach((p) => { const a = analyse(p.items); devices += a.total; laptops += a.laptops; high += a.high; ready += a.readyLaptops; if (p.refreshDate >= todayISO && p.refreshDate <= in90) next90 += a.total; });
+    const partners = new Set(S.pledges.map((p) => p.companyId)).size;
+    const demandQty = m.demands.reduce((s, d) => s + d.qty, 0);
+    const matchedQty = m.allocs.reduce((s, a) => s + a.qty, 0);
+
+    const months = months12();
+    const byMonth = {}; months.forEach((k) => byMonth[k] = { high: 0, med: 0, low: 0, total: 0, demand: 0 });
+    open.forEach((p) => { const k = monthKey(p.refreshDate); if (!byMonth[k]) return; const a = analyse(p.items); byMonth[k].high += a.high; byMonth[k].med += a.med; byMonth[k].low += a.low; byMonth[k].total += a.total; });
+    m.demands.forEach((d) => { const k = monthKey(d.needBy); if (byMonth[k]) byMonth[k].demand += d.qty; });
+    const max = Math.max(10, ...months.map((k) => byMonth[k].total));
+    const cols = months.map((k) => {
+      const b = byMonth[k], h = (n) => (n / max * 170) + "px";
+      const label = parseISO(k + "-01").toLocaleDateString("en-CA", { month: "short" }) + (k.endsWith("-01") || k === months[0] ? " '" + k.slice(2, 4) : "");
+      return '<button class="col" data-act="month" data-k="' + k + '" aria-pressed="' + (ui.month === k) + '" aria-label="' + label + ": " + b.total + ' devices"><span class="tot">' + (b.total || "") + '</span><div class="bars"><div class="seg-high" style="height:' + h(b.high) + '"></div><div class="seg-med" style="height:' + h(b.med) + '"></div><div class="seg-low" style="height:' + h(b.low) + '"></div></div><div class="baseline" style="width:100%"></div><span class="mo">' + label + '</span><span class="dm">' + (b.demand ? "▲" + b.demand : "") + "</span></button>";
+    }).join("");
+
+    const rows = S.pledges.slice().filter((p) => !ui.month || monthKey(p.refreshDate) === ui.month).sort((a, b) => a.refreshDate.localeCompare(b.refreshDate)).map((p) => {
+      const a = analyse(p.items), c = company(p.companyId), done = p.status >= 5;
+      const exp = ui.expanded[p.id];
+      const next = done ? "" : '<button class="btn btn-small" data-act="advance" data-id="' + p.id + '">Mark ' + STATUSES[p.status + 1].toLowerCase() + "</button>";
+      let html = "<tr><td><button class=\"btn btn-small btn-ghost expand-btn\" data-act=\"expand\" data-id=\"" + p.id + '" aria-expanded="' + !!exp + '" style="padding-left:0;color:var(--ink)">' + ICON.chev + "<b>" + esc(c.name) + "</b></button></td>" +
+        '<td class="num">' + a.total + '</td><td class="num">' + a.readyLaptops + "</td><td>" + fmtDate(p.refreshDate) + "</td><td>" + (done ? "—" : fmtDate(readyDate(p))) + "</td>" +
+        '<td><span class="chip ' + (done ? "chip-done" : "chip-status") + '">' + STATUSES[p.status] + "</span></td><td>" + next + "</td></tr>";
+      if (exp) {
+        html += '<tr><td colspan="7" style="background:var(--surface-2)"><div class="small" style="display:grid;gap:6px">' +
+          p.items.map((it) => { const f = scoreItem(it); return '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><span class="mono">' + it.qty + "×</span> " + esc([it.category, it.make, it.model].filter(Boolean).join(" ")) + " <span class=\"muted\">(" + (it.year || "year unknown") + ", " + it.condition.toLowerCase() + ")</span> " + tierChip(f.tier) + ' <span class="muted mono">score ' + f.score + "</span></div>"; }).join("") +
+          '<div class="muted">Contact: ' + esc(c.contact) + " · Area: " + esc(p.area) + " · " + a.grade + " · " + fmt(a.kg) + " kg</div></div></td></tr>";
+      }
+      return html;
+    }).join("");
+
+    return '' +
+      '<div class="view-head"><div><div class="eyebrow">FGT staff view</div><h1>Incoming supply</h1><p>Every pledge shows up here months before the devices arrive, so a small team can plan pickups, volunteer shifts and space.</p></div><span class="demo-pill">Demo data</span></div>' +
+      '<div class="kpis">' +
+      kpi(partners, "Active partners", "with at least one pledge") +
+      kpi(fmt(devices), "Devices pledged", fmt(laptops) + " are laptops") +
+      kpi(fmt(next90), "Arriving in 90 days", "by refresh date") +
+      kpi(devices ? Math.round(high / devices * 100) + "%" : "—", "High-reuse share", "of pledged devices") +
+      kpi(fmt(demandQty), "Community demand", "laptops requested") +
+      kpi(demandQty ? Math.round(matchedQty / demandQty * 100) + "%" : "—", "Demand covered", fmt(matchedQty) + " laptops matched") +
+      kpi(money(ready * AVG_PRICE), "Est. resale value", fmt(ready) + " reuse-ready laptops") +
+      kpi(S.companies.length, "Registered partners", "in the portal") +
+      "</div>" +
+      '<section class="panel"><div class="panel-head"><div><div class="eyebrow">Refresh calendar</div><h2>Supply forecast, next 12 months</h2></div><div class="legend" style="margin:0"><span><i class="seg-high"></i>High reuse</span><span><i class="seg-med"></i>Medium</span><span><i class="seg-low"></i>Recycle</span><span style="color:var(--signal);font-weight:600">▲ laptops requested</span></div></div>' +
+      '<div class="chart-wrap"><div class="forecast">' + cols + "</div></div>" +
+      '<p class="small muted" style="margin-top:6px">Select a month to filter the pipeline below.</p></section>' +
+      '<section class="panel"><div class="panel-head"><div><div class="eyebrow">Pipeline</div><h2>' + (ui.month ? "Pledges in " + parseISO(ui.month + "-01").toLocaleDateString("en-CA", { month: "long", year: "numeric" }) : "All pledges") + "</h2></div>" + (ui.month ? '<button class="btn btn-small" data-act="month" data-k="">Show all months</button>' : "") + "</div>" +
+      (rows ? '<div class="table-wrap"><table class="pipeline"><thead><tr><th>Partner</th><th class="num">Devices</th><th class="num">Ready laptops</th><th>Refresh</th><th>Est. ready</th><th>Status</th><th>Next step</th></tr></thead><tbody>' + rows + "</tbody></table></div>" : '<div class="empty">No pledges refresh in this month.</div>') +
+      "</section>";
+  }
+  function kpi(v, k, s) { return '<div class="kpi"><div class="k">' + k + '</div><div class="v">' + v + '</div><div class="s">' + s + "</div></div>"; }
+
+  // ----- Impact -----
+  function impactFor(pledges, m) {
+    let donated = 0, reused = 0, recycled = 0, kg = 0, co2 = 0; const orgs = {}; let verified = true;
+    pledges.forEach((p) => {
+      const a = analyse(p.items); donated += a.total; kg += a.kg;
+      let r, rc;
+      if (p.outcome) { r = p.outcome.reused; rc = p.outcome.recycled; p.outcome.orgs.forEach(([o, q]) => orgs[o] = (orgs[o] || 0) + q); }
+      else { verified = false; r = a.high + Math.round(a.med * 0.5); rc = a.total - r; (m.byPledge[p.id] || []).forEach((x) => { const d = demandById(x.demandId); orgs[d.org] = (orgs[d.org] || 0) + x.qty; }); }
+      reused += r; recycled += rc;
+      // CO2: weight reused share by category mix
+      const mix = {}; p.items.forEach((it) => mix[it.category] = (mix[it.category] || 0) + (Number(it.qty) || 0));
+      Object.entries(mix).forEach(([cat, q]) => { co2 += (CO2[cat] || 0) * q * (a.total ? r / a.total : 0); });
+    });
+    return { donated, reused, recycled, kg, co2, orgs, verified, hours: reused * 1.5, years: reused * 3 };
+  }
+  function viewImpact() {
+    const cid = ui.impactCompany || S.currentCompany;
+    const c = company(cid);
+    const pl = S.pledges.filter((p) => p.companyId === cid);
+    const sel = ui.impactPledge !== "all" && pl.find((p) => p.id === ui.impactPledge) ? pl.filter((p) => p.id === ui.impactPledge) : pl;
+    const m = computeMatches();
+    const copts = placeholder("Select a partner…", c) + S.companies.map((x) => '<option value="' + x.id + '"' + (x.id === cid ? " selected" : "") + ">" + esc(x.name) + "</option>").join("");
+    const popts = !c ? placeholder("Select a partner first") : '<option value="all">All pledges</option>' + pl.map((p) => '<option value="' + p.id + '"' + (p.id === ui.impactPledge ? " selected" : "") + ">" + fmtDate(p.refreshDate) + " · " + analyse(p.items).total + " devices</option>").join("");
+    let body;
+    if (!c) body = '<div class="empty">Choose a partner to see where its donated laptops went.</div>';
+    else if (!sel.length) body = '<div class="empty">' + esc(c.name) + " has no pledges yet. Create one in the Partner portal to see its projected impact.</div>";
+    else {
+      const r = impactFor(sel, m);
+      const yr = sel.map((p) => parseISO(p.refreshDate).getFullYear()).sort().pop();
+      const orgEntries = Object.entries(r.orgs);
+      const share = "Our retired laptops are getting a second life. In " + yr + ", " + c.name + " sent " + r.donated + " devices to Free Geek Toronto: " + r.reused + (r.verified ? " were" : " are expected to be") + " refurbished for students, seniors and newcomers across Toronto, and " + fmt(r.kg) + " kg of electronics stayed out of landfill." + (orgEntries.length ? " Organizations supplied include " + orgEntries.map((e) => e[0]).join(", ") + "." : "") + " #CircularEconomy #DigitalInclusion #FreeGeekToronto";
+      body = '<article class="report"><div class="report-head"><span class="eyebrow">' + (r.verified ? "Verified impact report" : "Projected impact · updates as FGT processes your devices") + "</span><h2>" + yr + " Circular Technology Impact</h2><p>" + esc(c.name) + " × Free Geek Toronto</p></div>" +
+        '<div class="report-body"><div class="big-stats">' +
+        bigStat(r.donated, "devices donated") + bigStat(r.reused, "devices reused") + bigStat(r.recycled, "responsibly recycled") +
+        bigStat(fmt(r.kg) + " kg", "e-waste diverted") + bigStat("~" + fmt(r.co2 / 1000) + " t", "CO₂e avoided (est.)") + bigStat(fmt(r.years), "extra device-years of use") +
+        "</div>" +
+        '<div class="grid-2-even"><div><h3 style="margin-bottom:8px">Where your devices went</h3>' +
+        (orgEntries.length ? '<div class="org-list">' + orgEntries.map(([o, q]) => "<div><span>" + esc(o) + '</span><span class="mono">' + q + " laptops</span></div>").join("") + "</div>" : '<p class="muted small">Your reused devices go to FGT\'s store for low-income households, students, seniors and newcomers.</p>') +
+        '<p class="small muted" style="margin-top:10px">Every reused device is data-wiped before refurbishment. Devices that can\'t be reused are recycled through FGT\'s R2-certified recycling partner, which physically destroys data-bearing parts.</p></div>' +
+        '<div><h3 style="margin-bottom:8px">Community value</h3><div class="org-list"><div><span>Est. volunteer &amp; trainee repair hours</span><span class="mono">' + fmt(r.hours) + "</span></div><div><span>Community organizations supplied</span><span class=\"mono\">" + orgEntries.length + "</span></div><div><span>Next planned refresh</span><span class=\"mono\">" + nextRefresh(c, pl) + "</span></div></div></div></div>" +
+        '<div><div class="panel-head" style="margin-bottom:8px"><h3>Share it</h3><div class="btn-row no-print"><button class="btn btn-small" data-act="print">' + ICON.print + 'Save as PDF</button><button class="btn btn-small" data-act="copy-share">' + ICON.copy + 'Copy LinkedIn post</button></div></div><div class="share" id="shareText">' + esc(share) + "</div></div>" +
+        '<p class="small muted">CO₂e and reuse figures are estimates based on typical device footprints and FGT\'s refurbishment rates. Verified figures replace projections once devices are processed.</p></div></article>';
+    }
+    return '<div class="view-head"><div><div class="eyebrow">Impact report</div><h1>What each refresh gave back</h1><p>Where your donated laptops went, ready to share with your staff, community and on LinkedIn.</p></div><span class="demo-pill">Demo data</span></div>' +
+      '<div class="form-row imp-controls" style="max-width:640px"><label>Partner<select id="impCompany">' + copts + '</select></label><label>Pledge<select id="impPledge"' + (c ? "" : " disabled") + ">" + popts + "</select></label></div>" + body;
+  }
+  function bigStat(v, k) { return '<div class="stat"><div class="v">' + v + '</div><div class="k">' + k + "</div></div>"; }
+  function nextRefresh(c, pl) {
+    const todayISO = toISO(TODAY);
+    const upcoming = pl.filter((p) => p.refreshDate >= todayISO).map((p) => p.refreshDate).sort()[0];
+    if (upcoming) return fmtDate(upcoming);
+    const last = pl.map((p) => p.refreshDate).sort().pop();
+    if (!last) return "—";
+    const d = parseISO(last); d.setFullYear(d.getFullYear() + c.cycle); return fmtDate(toISO(d));
+  }
+
+  // ---------- events ----------
+  document.addEventListener("click", (e) => {
+    const tab = e.target.closest(".tab");
+    if (tab) { ui.view = tab.dataset.view; location.hash = ui.view; render(); window.scrollTo(0, 0); return; }
+    const b = e.target.closest("[data-act]"); if (!b) return;
+    const act = b.dataset.act, id = b.dataset.id;
+    if (act === "toggle-register") { ui.showRegister = !ui.showRegister; render(); }
+    else if (act === "add-row") { S.draft.items.push(blankRow()); save(); $("#itemRows").innerHTML = itemRows(); renderAnalysis(); }
+    else if (act === "del-row") { S.draft.items.splice(Number(b.dataset.i), 1); if (!S.draft.items.length) S.draft.items.push(blankRow()); save(); $("#itemRows").innerHTML = itemRows(); renderAnalysis(); }
+    else if (act === "sample") { S.draft.items = parseCSV(SAMPLE_CSV); S.draft.fileName = "stl_laptop_refresh.csv"; S.draft.csvError = ""; save(); render(); toast(analyse(S.draft.items).total + " devices loaded from stl_laptop_refresh.csv"); }
+    else if (act === "copy-template") { copyText("category,make,model,year,quantity,condition\nLaptop,Dell,Latitude 3420,2022,36,Working", "CSV template copied"); }
+    else if (act === "submit-pledge") submitPledge();
+    else if (act === "schedule") { ui.pickupFor = id; render(); }
+    else if (act === "cancel-pickup") { ui.pickupFor = null; render(); }
+    else if (act === "confirm-pickup") {
+      const p = S.pledges.find((x) => x.id === id); const d = $("#pickDate").value;
+      if (!d) { toast("Choose a pickup date"); return; }
+      p.pickupDate = d; p.status = Math.max(p.status, 1); ui.pickupFor = null; save(); render(); toast("Pickup booked for " + fmtDate(d));
+    }
+    else if (act === "go-impact") { const p = S.pledges.find((x) => x.id === id); ui.impactCompany = p.companyId; ui.impactPledge = id; ui.view = "impact"; location.hash = "impact"; render(); window.scrollTo(0, 0); }
+    else if (act === "month") { const k = b.dataset.k; ui.month = !k || ui.month === k ? null : k; render(); }
+    else if (act === "expand") { ui.expanded[id] = !ui.expanded[id]; render(); }
+    else if (act === "advance") {
+      const p = S.pledges.find((x) => x.id === id); if (!p || p.status >= 5) return;
+      if (p.status === 0 && !p.pickupDate) p.pickupDate = p.refreshDate;
+      const before = computeMatches();
+      p.status++;
+      if (p.status === 5) {
+        const a = analyse(p.items);
+        const reused = a.high + Math.round(a.med * 0.5);
+        const mine = before.byPledge[p.id] || [];
+        const orgs = mine.map((x) => [demandById(x.demandId).org, x.qty]);
+        // delivered laptops fulfil those requests, so they leave the open demand board
+        mine.forEach((x) => { const d = demandById(x.demandId); d.qty -= x.qty; });
+        S.demands = S.demands.filter((d) => d.qty > 0);
+        p.outcome = { reused, recycled: a.total - reused, orgs };
+        toast(company(p.companyId).name + " pledge deployed. Impact report verified.");
+      } else toast(company(p.companyId).name + ": " + STATUSES[p.status]);
+      save(); render();
+    }
+    else if (act === "print") { window.print(); }
+    else if (act === "copy-share") { copyText($("#shareText").textContent, "Post copied"); }
+    else if (act === "reset") { if (b.dataset.confirm === "1") { S = seed(); save(); ui.month = null; ui.expanded = {}; ui.impactCompany = null; ui.impactPledge = "all"; render(); toast("Demo data reset"); b.textContent = "Reset demo data"; b.dataset.confirm = ""; } else { b.textContent = "Click again to confirm reset"; b.dataset.confirm = "1"; setTimeout(() => { b.textContent = "Reset demo data"; b.dataset.confirm = ""; }, 4000); } }
+  });
+
+  function submitPledge() {
+    const items = S.draft.items.filter((it) => Number(it.qty) > 0);
+    if (!company(S.currentCompany)) { toast("Choose or register your organization first"); return; }
+    if (!S.draft.refreshDate) { toast("Add a refresh date first"); return; }
+    if (!S.draft.area) { toast("Choose a pickup area"); return; }
+    if (!items.length) { toast("Add at least one device with a quantity"); return; }
+    if (items.some((it) => !it.category || !it.condition)) { toast("Choose a type and condition for every device"); return; }
+    const p = { id: uid("p"), companyId: S.currentCompany, refreshDate: S.draft.refreshDate, area: S.draft.area, status: 0, pickupDate: "", items: items.map((it) => Object.assign({}, it, { qty: Number(it.qty), year: Number(it.year) || "" })) };
+    S.pledges.push(p);
+    const a = analyse(p.items);
+    S.draft = freshFor(); save(); render();
+    toast(a.total + " devices added to FGT's " + parseISO(p.refreshDate).toLocaleDateString("en-CA", { month: "long" }) + " forecast");
+  }
+
+  function copyText(t, msg) {
+    try { navigator.clipboard.writeText(t).then(() => toast(msg), () => fallbackCopy(t, msg)); } catch (e) { fallbackCopy(t, msg); }
+  }
+  function fallbackCopy(t, msg) {
+    const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast(msg); } catch (e) { toast("Select the text to copy it"); }
+    ta.remove();
+  }
+
+  document.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t.dataset.row != null) {
+      const it = S.draft.items[Number(t.dataset.row)]; if (!it) return;
+      const f = t.dataset.f; it[f] = (f === "qty" || f === "year") ? (t.value === "" ? "" : Number(t.value)) : t.value;
+      save(); renderAnalysis();
+    } else if (t.id === "dRefresh") { S.draft.refreshDate = t.value; save(); renderAnalysis(); }
+  });
+  document.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.id === "companySel") { S.currentCompany = t.value; S.draft.area = company(t.value).area; ui.pickupFor = null; save(); render(); }
+    else if (t.id === "dArea") { S.draft.area = t.value; save(); }
+    else if (t.id === "impCompany") { ui.impactCompany = t.value; ui.impactPledge = "all"; render(); }
+    else if (t.id === "impPledge") { ui.impactPledge = t.value; render(); }
+    else if (t.id === "csvFile" && t.files && t.files[0]) {
+      const file = t.files[0]; const r = new FileReader();
+      r.onload = () => {
+        try { S.draft.items = parseCSV(String(r.result)); S.draft.fileName = file.name; S.draft.csvError = ""; toast(analyse(S.draft.items).total + " devices loaded from " + file.name); }
+        catch (err) { S.draft.csvError = err.message; S.draft.fileName = ""; }
+        save(); render();
+      };
+      r.readAsText(file);
+    }
+  });
+  document.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (e.target.id === "regForm") {
+      const name = $("#rName").value.trim(); if (!name) return;
+      const c = { id: uid("c"), name, contact: $("#rContact").value.trim() || "Contact not set", employees: Number($("#rEmp").value) || 1, area: $("#rArea").value, cycle: Number($("#rCycle").value) };
+      S.companies.push(c); S.currentCompany = c.id; S.draft.area = c.area; ui.showRegister = false; save(); render(); toast(name + " registered");
+    } else if (e.target.id === "demandForm") {
+      const d = { id: uid("d"), org: $("#dmOrg").value.trim(), qty: Number($("#dmQty").value) || 1, needBy: $("#dmDate").value, budget: Number($("#dmBudget").value) || 0, purpose: $("#dmPurpose").value.trim() || "Laptops for program participants" };
+      if (!d.org || !d.needBy) return;
+      S.demands.push(d); save(); render();
+      const got = (computeMatches().byDemand[d.id] || []).reduce((s, x) => s + x.qty, 0);
+      toast(d.org + ": " + got + " of " + d.qty + " laptops matched");
+    }
+  });
+
+  function fromHash() { const h = location.hash.replace("#", ""); if (["portal", "dashboard", "impact"].includes(h)) ui.view = h; }
+  window.addEventListener("hashchange", () => { fromHash(); render(); });
+  fromHash();
+  render();
+})();
+</script>
+
+</body></html>
